@@ -20,6 +20,13 @@ public class Animal {
         }
     }
 
+    static class Pig extends Animal {
+        @Override
+        void AnimalSound() {
+            System.out.println("꿀! 꿀!");
+        }
+    }
+
         public static void main(String[] args) {
             Animal animal = new Animal();
             animal.AnimalSound();
@@ -29,6 +36,9 @@ public class Animal {
 
             Cat cat = new Cat();
             cat.AnimalSound();
+
+            Pig pig = new Pig();
+            pig.AnimalSound();
 
             }
         }
