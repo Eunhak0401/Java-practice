@@ -2,237 +2,168 @@ import java.util.Scanner;
 
 public class Bowling {
 
-    public static void main(String[] args) {
-        game();
+    private static int[][] scoreBoard = new int[10][3]; // 10프레임까지 점수를 저장할 배열 (각 프레임에 대해 3개의 롤)
+    private static int[] framescores = new int[10]; // 각 프레임의 점수를 저장할 배열
+
+    // 게임을 시작하는 메서드
+    public static void game() {
+        get_score();
     }
 
-    public static void game() {
-        String[][] scoreBoard = new String[10][3]; // 점수판 (10프레임, 3개의 항목)
-        String[] extraPoints = new String[10]; // 추가 점수
-        for (int i = 0; i < 10; i++) {
-            scoreBoard[i][0] = scoreBoard[i][1] = scoreBoard[i][2] = "-";
-            extraPoints[i] = "";
-        }
-
-        int frameIndex = 0;
-        int roll = 0;
-
+    // 점수 입력 및 계산을 위한 메서드
+    public static void get_score() {
         Scanner scanner = new Scanner(System.in);
+        int frame = 0;
 
-        while (frameIndex < 10) {
-            if (frameIndex == 9) { // 10프레임일 때
-                if (roll == 0) {
-                    System.out.print("10번째 프레임 첫 번째 점수 입력: ");
-                } else if (roll == 1) {
-                    System.out.print("10번째 프레임 두 번째 점수 입력: ");
-                } else {
-                    System.out.print("10번째 프레임 세 번째 점수 입력: ");
-                }
-            } else { // 1 ~ 9 프레임일 때
-                System.out.print("프레임 " + (frameIndex + 1) + " " + (roll == 0 ? "첫 번째" : "두 번째") + " 점수 입력: ");
+        while (frame < 10) { // 10프레임까지 반복
+            System.out.print("프레임 " + (frame + 1) + " 첫 번째 점수 입력: ");
+            int firstRoll = scanner.nextInt();
+            if (firstRoll < 0 || firstRoll > 10) {
+                System.out.println("잘못된 입력입니다. 0과 10 사이의 값을 입력하세요.");
+                continue;
             }
 
-            String input = scanner.next().trim();
+            if (firstRoll == 10) { // 스트라이크인 경우
+                scoreBoard[frame][0] = 10;
+                scoreBoard[frame][1] = 0; // 두 번째 roll은 필요없음
+                System.out.println("스트라이크!");
 
-            // 입력 검증 및 점수 기록
-            if (input.equals("S") && roll == 0) { // 스트라이크, 첫 번째 점수라면
-                scoreBoard[frameIndex][roll] = "S";
-                if (frameIndex == 9) { // 10번째 프레임
-                    roll++;
-                } else {
-                    roll = 0;
-                    frameIndex++;
-                }
-            } else if (frameIndex == 9 && input.equals("S") && roll > 0) { // 10프레임에서 스트라이크
-                scoreBoard[frameIndex][roll] = "S";
-                roll++;
-            } else if (frameIndex == 9 && input.equals("P") && roll > 0) { // 10프레임에서 스페어
-                if (roll == 1 && scoreBoard[frameIndex][0].equals("S")) {
-                    System.out.println("유효하지 않은 입력입니다. 다시 입력해주세요.");
-                    continue;
-                }
-                scoreBoard[frameIndex][roll] = "P";
-                roll++;
-            } else if (input.equals("P") && roll == 1 && !scoreBoard[frameIndex][0].equals("S")) { // P, 두 번째 자리가 1이라면
-                scoreBoard[frameIndex][roll] = "P";
-                roll = 0;
-                frameIndex++;
-            } else if (input.equals("-") || input.matches("\\d")) { // '-' 또는 숫자일 때
-                if (input.equals("-")) {
-                    scoreBoard[frameIndex][roll] = "0";
-                } else {
-                    int score = Integer.parseInt(input);
-                    if (score >= 1 && score <= 9) {
-                        scoreBoard[frameIndex][roll] = input;
-                    } else {
-                        System.out.println("유효하지 않은 입력입니다. 점수는 1부터 9까지 입력할 수 있습니다. 다시 입력해주세요.");
+                if (frame == 9) { // 10프레임에서 추가 롤 입력
+                    System.out.print("10프레임 보너스 첫 번째 점수 입력: ");
+                    scoreBoard[frame][1] = scanner.nextInt();
+                    if (scoreBoard[frame][1] < 0 || scoreBoard[frame][1] > 10) {
+                        System.out.println("잘못된 입력입니다. 0과 10 사이의 값을 입력하세요.");
+                        continue;
+                    }
+
+                    System.out.print("10프레임 보너스 두 번째 점수 입력: ");
+                    scoreBoard[frame][2] = scanner.nextInt();
+                    if (scoreBoard[frame][2] < 0 || scoreBoard[frame][2] > 10) {
+                        System.out.println("잘못된 입력입니다. 0과 10 사이의 값을 입력하세요.");
                         continue;
                     }
                 }
+            } else { // 스트라이크가 아닌 경우
+                System.out.print("프레임 " + (frame + 1) + " 두 번째 점수 입력: ");
+                int secondRoll = scanner.nextInt();
+                if (secondRoll < 0 || secondRoll + firstRoll > 10) {
+                    System.out.println("잘못된 입력입니다. 첫 번째 점수와 합쳐서 10을 넘지 않도록 입력하세요.");
+                    continue;
+                }
 
-                if (frameIndex == 9) { // 10프레임일 때
-                    roll++;
-                    if (roll > 1) { // 10프레임에서 두 번째 점수를 입력한 후
-                        if (scoreBoard[frameIndex][0].matches("\\d") && scoreBoard[frameIndex][1].matches("\\d")) {
-                            break;
-                        } else if (scoreBoard[frameIndex][0].matches("\\d") && scoreBoard[frameIndex][1].equals("S")) {
-                            System.out.println("유효하지 않은 입력입니다. 다시 입력해주세요.");
+                if (firstRoll + secondRoll == 10) { // 스페어인 경우
+                    scoreBoard[frame][0] = firstRoll;
+                    scoreBoard[frame][1] = secondRoll;
+                    System.out.println("스페어!");
+
+                    if (frame == 9) { // 10프레임에서 스페어인 경우
+                        System.out.print("10프레임 보너스 첫 번째 점수 입력: ");
+                        scoreBoard[frame][2] = scanner.nextInt();
+                        if (scoreBoard[frame][2] < 0 || scoreBoard[frame][2] > 10) {
+                            System.out.println("잘못된 입력입니다. 0과 10 사이의 값을 입력하세요.");
                             continue;
                         }
                     }
-                } else {
-                    if (roll == 1) { // 두 번째 점수 입력 후
-                        if (scoreBoard[frameIndex][0].matches("\\d")) {
-                            int firstScore = Integer.parseInt(scoreBoard[frameIndex][0]);
-                            int secondScore = Integer.parseInt(scoreBoard[frameIndex][1]);
-                            if (firstScore + secondScore > 10) {
-                                System.out.println("두 점수의 합이 10점을 초과합니다. 다시 입력해주세요.");
-                                continue;
-                            }
-                        }
-                        roll = 0;
-                        frameIndex++;
-                    } else if (roll == 0 && scoreBoard[frameIndex][0].equals("S")) {
-                        roll = 0;
-                        frameIndex++;
-                    } else {
-                        roll++;
-                    }
+                } else { // 일반적인 경우
+                    scoreBoard[frame][0] = firstRoll;
+                    scoreBoard[frame][1] = secondRoll;
                 }
             }
 
-            // 점수판 및 추가 점수 업데이트
-            updateExtraPoints(scoreBoard, extraPoints);
-            printScoreBoard(scoreBoard, extraPoints);
-
-            // 현재 점수 계산
-            int totalScore = calculateScore(scoreBoard, extraPoints);
-            System.out.println("현재 점수: " + totalScore);
-
-            // 10프레임에서 세 번째 점수를 입력한 후 게임 종료
-            if (frameIndex == 9 && roll == 3) {
-                break;
+            // 점수 계산
+            int totalScore = 0;
+            for (int i = 0; i < 10; i++) {
+                int frameScore = scoreBoard[i][0] + scoreBoard[i][1];
+                if (i == 9) { // 10프레임의 경우
+                    frameScore += scoreBoard[i][2]; // 10프레임의 세 번째 롤 추가
+                } else if (scoreBoard[i][0] == 10) { // 스트라이크
+                    frameScore += getStrikeBonus(scoreBoard, i);
+                } else if (scoreBoard[i][0] + scoreBoard[i][1] == 10) { // 스페어
+                    frameScore += getSpareBonus(scoreBoard, i);
+                }
+                totalScore += frameScore;
+                framescores[i] = totalScore; // 누적 점수 저장
             }
+
+            // 현재까지의 스코어 보드 출력
+            score_board();
+
+            frame++;
         }
-
-        // 출력
-        System.out.println("게임 종료");
-        printScoreBoard(scoreBoard, extraPoints);
-        int finalScore = calculateScore(scoreBoard, extraPoints);
-        System.out.println("최종 점수: " + finalScore);
-
-        scanner.close();
     }
 
-    public static int calculateScore(String[][] scoreBoard, String[] extraPoints) { // 점수 계산
-        int totalScore = 0;
-        int[] frameScores = new int[10]; // 각 프레임의 점수 저장 리스트
-
-        for (int i = 0; i < 10; i++) { // 총 10프레임까지
-            int frameScore = 0;
-            if (scoreBoard[i][0].equals("S")) { // 스트라이크
-                frameScore = 10;
-                if (i < 9) {
-                    String[] nextFrame = scoreBoard[i + 1];
-                    if (nextFrame[0].equals("S")) { // 다음 프레임도 스트라이크
-                        frameScore += 10;
-                        if (i + 2 < 10) { // 다음 다음 프레임
-                            String[] nextNextFrame = scoreBoard[i + 2];
-                            frameScore += nextNextFrame[0].equals("S") ? 10 : Integer.parseInt(nextNextFrame[0].replace("-", "0"));
-                        } else {
-                            frameScore += scoreBoard[9][1].equals("S") ? 10 : Integer.parseInt(scoreBoard[9][1].replace("-", "0"));
-                        }
-                    } else { // 다음 프레임이 스트라이크가 아니면
-                        frameScore += Integer.parseInt(nextFrame[0].replace("-", "0"));
-                        if (nextFrame[1].equals("P")) { // 스페어일때
-                            frameScore += 10 - Integer.parseInt(nextFrame[0].replace("-", "0"));
-                        } else { // 숫자일때
-                            frameScore += Integer.parseInt(nextFrame[1].replace("-", "0"));
-                        }
-                    }
-                } else { // 10번째 프레임
-                    frameScore += scoreBoard[i][1].equals("S") ? 10 : Integer.parseInt(scoreBoard[i][1].replace("-", "0"));
-                    frameScore += scoreBoard[i][2].equals("S") ? 10 : (scoreBoard[i][2].equals("P") ? 10 - Integer.parseInt(scoreBoard[i][1].replace("-", "0")) : Integer.parseInt(scoreBoard[i][2].replace("-", "0")));
-                }
-            } else if (scoreBoard[i][1].equals("P")) { // 스페어일때
-                frameScore = 10;
-                if (i < 9) { // 10번째 프레임이 아니면
-                    String[] nextFrame = scoreBoard[i + 1];
-                    frameScore += nextFrame[0].equals("S") ? 10 : Integer.parseInt(nextFrame[0].replace("-", "0"));
-                } else { // 10번째 프레임이면
-                    frameScore += scoreBoard[i][2].equals("S") ? 10 : (10 - Integer.parseInt(scoreBoard[i][0].replace("-", "0"))) + (scoreBoard[i][2].equals("S") ? 10 : Integer.parseInt(scoreBoard[i][2].replace("-", "0")));
-                }
-            } else { // 일반 숫자 프레임
-                frameScore = Integer.parseInt(scoreBoard[i][0].replace("-", "0")) + Integer.parseInt(scoreBoard[i][1].replace("-", "0"));
-            }
-            frameScores[i] = frameScore; // 점수 저장
-        }
-
-        for (int frameScore : frameScores) {
-            totalScore += frameScore; // 점수 계산
-        }
-
-        return totalScore;
-    }
-
-    public static void printScoreBoard(String[][] scoreBoard, String[] extraPoints) {
-        // 점수판 출력
-        for (int i = 0; i < 10; i++) {
-            String[] frame = scoreBoard[i];
-            if (i == 9) { // 10프레임
-                System.out.printf("%2s %2s %2s", frame[0], frame[1], frame[2]);
-                System.out.print(" | ");
-            } else { // 1 ~ 9프레임
-                System.out.printf("%2s %2s", frame[0], frame[1]);
-                System.out.print(" | ");
-            }
-        }
-        System.out.println();
-
-        // 추가 점수 출력
-        for (int i = 0; i < 10; i++) {
-            String extra = extraPoints[i];
-            if (i == 9) { // 10프레임
-                System.out.printf("%2s", extra);
-                System.out.print("       | ");
-            } else { // 1~9프레임
-                System.out.printf("%2s", extra);
-                System.out.print("    | ");
-            }
-        }
-        System.out.println();
-    }
-
-    public static void updateExtraPoints(String[][] scoreBoard, String[] extraPoints) {
-        for (int i = 0; i < 10; i++) { // 총 10프레임
-            if (scoreBoard[i][0].equals("S")) { // 스트라이크
-                int[] nextTwoRolls = new int[2];
-                if (i < 9) { // 1 ~ 9프레임
-                    String[] nextFrame = scoreBoard[i + 1];
-                    nextTwoRolls[0] = nextFrame[0].equals("S") ? 10 : Integer.parseInt(nextFrame[0].replace("-", "0"));
-                    if (nextFrame[0].equals("S") && i + 2 < 10) {
-                        String[] nextNextFrame = scoreBoard[i + 2];
-                        nextTwoRolls[1] = nextNextFrame[0].equals("S") ? 10 : Integer.parseInt(nextNextFrame[0].replace("-", "0"));
-                    } else {
-                        nextTwoRolls[1] = nextFrame[1].equals("S") ? 10 : (nextFrame[1].equals("P") ? 10 - Integer.parseInt(nextFrame[0].replace("-", "0")) : Integer.parseInt(nextFrame[1].replace("-", "0")));
-                    }
-                } else { // 10번째 프레임
-                    nextTwoRolls[0] = scoreBoard[i][1].equals("S") ? 10 : Integer.parseInt(scoreBoard[i][1].replace("-", "0"));
-                    nextTwoRolls[1] = scoreBoard[i][2].equals("P") ? 10 - Integer.parseInt(scoreBoard[i][1].replace("-", "0")) : (scoreBoard[i][2].equals("S") ? 10 : Integer.parseInt(scoreBoard[i][2].replace("-", "0")));
-                }
-                extraPoints[i] = String.valueOf(10 + nextTwoRolls[0] + nextTwoRolls[1]);
-            } else if (scoreBoard[i][1].equals("P")) { // 스페어
-                if (i < 9) {
-                    String[] nextFrame = scoreBoard[i + 1];
-                    extraPoints[i] = String.valueOf(10 + (nextFrame[0].equals("S") ? 10 : Integer.parseInt(nextFrame[0].replace("-", "0"))));
-                } else { // 10번째 프레임
-                    extraPoints[i] = String.valueOf(10 + (scoreBoard[i][2].equals("S") ? 10 : Integer.parseInt(scoreBoard[i][2].replace("-", "0"))));
-                }
+    // 스트라이크 보너스 점수 계산
+    private static int getStrikeBonus(int[][] scoreBoard, int currentFrame) {
+        int bonus = 0;
+        if (currentFrame == 9) { // 10프레임에서 스트라이크인 경우
+            bonus += scoreBoard[currentFrame][1] + scoreBoard[currentFrame][2];
+        } else if (currentFrame + 1 < 10) {
+            bonus += scoreBoard[currentFrame + 1][0]; // 다음 프레임 첫 번째 roll
+            if (scoreBoard[currentFrame + 1][0] == 10 && currentFrame + 2 < 10) {
+                bonus += scoreBoard[currentFrame + 2][0]; // 다음 다음 프레임 첫 번째 roll
             } else {
-                // 단순한 점수 입력의 경우, 추가 점수는 두 점수를 합한 값으로 설정
-                int frameScore = Integer.parseInt(scoreBoard[i][0].replace("-", "0")) + Integer.parseInt(scoreBoard[i][1].replace("-", "0"));
-                extraPoints[i] = String.valueOf(frameScore);
+                bonus += scoreBoard[currentFrame + 1][1]; // 다음 프레임 두 번째 roll
             }
         }
+        return bonus;
+    }
+
+    // 스페어 보너스 점수 계산
+    private static int getSpareBonus(int[][] scoreBoard, int currentFrame) {
+        int bonus = 0;
+        if (currentFrame == 9) { // 10프레임에서 스페어인 경우
+            bonus += scoreBoard[currentFrame][2];
+        } else if (currentFrame + 1 < 10) {
+            bonus += scoreBoard[currentFrame + 1][0]; // 다음 프레임 첫 번째 roll
+        }
+        return bonus;
+    }
+
+    // 스코어 보드 판을 출력하는 메서드
+    public static void score_board() {
+        System.out.println("# -------------------------------------------------------------------------------------------"); // 첫 번째 줄
+
+        // 프레임 헤더
+        System.out.print("# Frame  ");
+        for (int i = 1; i <= 10; i++) {
+            System.out.printf("|   %d   ", i);
+        }
+        System.out.println("   |");
+
+        System.out.println("# -------------------------------------------------------------------------------------------"); // 두 번째 줄
+
+        // 롤 헤더
+        System.out.print("# Rolls  ");
+        for (int i = 0; i < 10; i++) {
+            // 첫 번째 롤
+            String roll1 = (scoreBoard[i][0] == 10) ? "S" : String.format("%s", (scoreBoard[i][0] == 0 ? " " : scoreBoard[i][0]));
+            // 두 번째 롤
+            String roll2 = (i == 9 && (scoreBoard[i][0] == 10 || scoreBoard[i][0] + scoreBoard[i][1] == 10))
+                    ? String.format("%s", (scoreBoard[i][1] == 0 ? " " : scoreBoard[i][1])) : (scoreBoard[i][1] == 0 && scoreBoard[i][0] != 10) ? "  " : String.format("%2s", (scoreBoard[i][1] == 0 ? " " : scoreBoard[i][1]));
+            // 세 번째 롤 (마지막 프레임에만)
+            String roll3 = (i == 9 && (scoreBoard[i][0] == 10 || scoreBoard[i][0] + scoreBoard[i][1] == 10))
+                    ? String.format("%s", (scoreBoard[i][2] == 0 ? " " : scoreBoard[i][2])) : "  ";
+            if (i < 9) {
+                System.out.printf("| %s | %s", roll1, roll2);
+            } else {
+                System.out.printf("| %s | %s| %s", roll1, roll2, roll3);
+            }
+        }
+        System.out.println("|");
+
+        System.out.println("# -----------------------------------------------------------------------------------------------"); // 세 번째 줄
+
+        // 점수 헤더
+        System.out.print("# Score  ");
+        for (int i = 0; i < 10; i++) {
+            System.out.printf("|  %3d  ", framescores[i]); // 점수를 4자리로 맞춤
+        }
+        System.out.println("    |");
+
+        System.out.println("# -----------------------------------------------------------------------------------------------"); // 네 번째 줄
+    }
+
+    public static void main(String[] args) {
+        game();
     }
 }
