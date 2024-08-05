@@ -5,11 +5,6 @@ public class Bowling {
     private static int[][] scoreBoard = new int[10][3]; // 10프레임까지 점수를 저장할 배열 (각 프레임에 대해 3개의 롤)
     private static int[] framescores = new int[10]; // 각 프레임의 점수를 저장할 배열
 
-    // 게임을 시작하는 메서드
-    public static void game() {
-        get_score();
-    }
-
     // 점수 입력 및 계산을 위한 메서드
     public static void get_score() {
         Scanner scanner = new Scanner(System.in);
@@ -135,35 +130,27 @@ public class Bowling {
         // 롤 헤더
         System.out.print("# Rolls  ");
         for (int i = 0; i < 10; i++) {
-            // 첫 번째 롤
-            String roll1 = (scoreBoard[i][0] == 10) ? "S" : String.format("%s", (scoreBoard[i][0] == 0 ? "0" : scoreBoard[i][0]));
-            // 두 번째 롤
-            String roll2 = (i == 9 && (scoreBoard[i][0] == 10 || scoreBoard[i][0] + scoreBoard[i][1] == 10))
-                    ? String.format("%s", (scoreBoard[i][1] == 0 ? "  " : scoreBoard[i][1])) : (scoreBoard[i][1] == 0 && scoreBoard[i][0] != 10) ? "  " : String.format("%2s", (scoreBoard[i][1] == 0 ? "  " : scoreBoard[i][1]));
-            // 세 번째 롤 (마지막 프레임에만)
-            String roll3 = (i == 9 && (scoreBoard[i][0] == 10 || scoreBoard[i][0] + scoreBoard[i][1] == 10))
-                    ? String.format("%s", (scoreBoard[i][2] == 0 ? " " : scoreBoard[i][2])) : "  ";
             if (i < 9) {
-                System.out.printf("| %s | %s", roll1, roll2);
+                System.out.printf("|%2d |%2d ", scoreBoard[i][0], scoreBoard[i][1]);
             } else {
-                System.out.printf("| %s | %s| %s", roll1, roll2, roll3);
+                System.out.printf("|%2d |%2d |%2d ", scoreBoard[i][0], scoreBoard[i][1], scoreBoard[i][2]);
             }
         }
         System.out.println("|");
 
-        System.out.println("# -----------------------------------------------------------------------------------------------"); // 세 번째 줄
+        System.out.println("# -------------------------------------------------------------------------------------------"); // 세 번째 줄
 
         // 점수 헤더
         System.out.print("# Score  ");
         for (int i = 0; i < 10; i++) {
-            System.out.printf("|  %3d  ", framescores[i]); // 점수를 4자리로 맞춤
+            System.out.printf("|  %3d  ", framescores[i]);
         }
         System.out.println("    |");
 
-        System.out.println("# -----------------------------------------------------------------------------------------------"); // 네 번째 줄
+        System.out.println("# -------------------------------------------------------------------------------------------"); // 네 번째 줄
     }
 
     public static void main(String[] args) {
-        game();
+        get_score();
     }
 }
