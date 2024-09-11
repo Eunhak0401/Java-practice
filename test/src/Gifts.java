@@ -17,7 +17,7 @@ public class Gifts {
             input = scanner.next(); // 사용자로부터 문자열 입력 받기
 
             if (input.equals("stop")) { // 입력된 값이 "stop"인 경우
-                System.out.println("이제 선물을 주도록하겠습니다");
+                System.out.println("이제 선물을 주도록하겠습니다 ('stop'를 입력하면 종료)");
             } else { // "stop"이 아닌 경우 친구 이름을 배열에 저장
                 friends[friendCount] = input; // friends 배열에 입력된 친구 이름 저장
                 friendCount++; // 배열에 저장된 친구 수 증가
@@ -48,7 +48,7 @@ public class Gifts {
     }
 
     // 선물 주고받은 목록 표시
-    public static void printGiftsList(){
+    public static void printGiftsList() {
         System.out.print("친구 선물 목록: ");
         for (String gift : gifts) {
             if (gift != null) { // null이 아닌 값만 출력
@@ -60,7 +60,10 @@ public class Gifts {
 
 
     // 선물 받을 친구 두 명 선택 함수
+
     public static void selectGiftRecipients(Scanner scanner) {
+        String input = "";
+
         System.out.println("위 친구 목록에서 두 명의 이름을 입력하세요");
 
         // 첫 번째 친구 선택
@@ -73,8 +76,8 @@ public class Gifts {
         String secondFriend = scanner.next();
         gifts[1] = secondFriend; // gifts 배열에 두 번째 친구 저장
 
-
     }
+    
 
     public static void gift_Calculation(){
 

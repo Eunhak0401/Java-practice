@@ -1,7 +1,3 @@
-// 1단계 뺴기 더하기 곱셉 나눗셈 계산하기
-// 2단계 여러가지 기호 넣기 (예 ( ))
-// 다항식 2 / ((1+2)*3) 계산하기
-
 import java.util.Scanner;
 
 public class polynomial {
@@ -14,7 +10,7 @@ public class polynomial {
 
         String processedInput = roundBrackets(polynomial); // 괄호 처리
         double result = evaluatePolynomial(processedInput); // 최종 계산
-        System.out.println("처리된 다항식 결과: " + result);
+        System.out.println("계산된 다항식 결과: " + result);
     }
 
     // 괄호를 처리하는 함수
@@ -46,7 +42,7 @@ public class polynomial {
         return evaluateAdditionAndSubtraction(input);
     }
 
-    // 곱셈과 나눗셈을 먼저 처리하는 함수
+    // 곱셈과 나눗셈을 처리하는 함수
     public static String evaluateMultiplicationAndDivision(String input) {
         String[] terms = input.split("(?=\\+)|(?=-)");
         StringBuilder result = new StringBuilder();
