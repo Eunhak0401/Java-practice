@@ -77,7 +77,7 @@ public class Gifts {
         gifts[1] = secondFriend; // gifts 배열에 두 번째 친구 저장
 
     }
-    
+
 
     public static void gift_Calculation(){
 
