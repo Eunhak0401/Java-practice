@@ -1,3 +1,5 @@
+package 다항식_계산기;
+
 import java.util.Scanner;
 
 public class polynomial {
