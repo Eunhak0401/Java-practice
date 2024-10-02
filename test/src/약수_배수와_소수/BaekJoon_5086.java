@@ -11,7 +11,7 @@ public class BaekJoon_5086 {
             int b = sc.nextInt();
 
 
-            
+
         }
     }
 }
