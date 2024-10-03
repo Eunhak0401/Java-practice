@@ -10,7 +10,17 @@ public class BaekJoon_5086 {
             int a = sc.nextInt();
             int b = sc.nextInt();
 
+            if (a == 0 && b == 0){
+                break;
+            }
 
+            if (b % a == 0){
+                System.out.println("factor");
+            } else if (a % b == 0) {
+                System.out.println("multiple");
+            } else if (a % b != 0) {
+                System.out.println("neither");
+            }
 
         }
     }
