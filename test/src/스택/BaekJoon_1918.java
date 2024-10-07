@@ -1,29 +1,28 @@
-package 다항식_계산기;
+package 스택;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Stack;
 
-public class polynomial_2 {
+public class BaekJoon_1918 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
 
+        String input = br.readLine().trim();  // 공백 제거
         Stack<Character> stack = new Stack<>();
 
-        String input = br.readLine();
-
-        for (int i = 0; i < input.length(); i++) {
+        for (int i = 0; i < input.length(); i++) { // 입력된 문자열 수까지 반복
             char c = input.charAt(i);
 
-            // 숫자(피연산자)는 바로 출력
-            if (Character.isLetterOrDigit(c)) {
+            // 피연산자(알파벳은 바로 출력)
+            if (Character.isLetter(c)) {
                 sb.append(c);
             }
             // 연산자 처리
             else if (c == '+' || c == '-' || c == '*' || c == '/') {
-                // 스택에 더 높은 우선순위의 연산자가 있으면 먼저 pop
+                // 스택이 비어있지 않고, 현재 연산자보다 우선순위가 높은 연산자가 있을 때 pop
                 while (!stack.isEmpty() && precedence(stack.peek()) >= precedence(c)) {
                     sb.append(stack.pop());
                 }
@@ -35,10 +34,14 @@ public class polynomial_2 {
             }
             // 닫는 괄호를 만나면 여는 괄호까지 스택에서 pop
             else if (c == ')') {
+                // 여는 괄호가 나올 때까지 스택에서 연산자를 pop
                 while (!stack.isEmpty() && stack.peek() != '(') {
                     sb.append(stack.pop());
                 }
-                stack.pop(); // 여는 괄호 제거
+                // 여는 괄호 제거 (스택에서 pop)
+                if (!stack.isEmpty()) {
+                    stack.pop();
+                }
             }
         }
 
@@ -62,6 +65,3 @@ public class polynomial_2 {
         }
     }
 }
-
-
-
