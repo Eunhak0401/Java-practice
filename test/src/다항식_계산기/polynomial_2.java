@@ -47,8 +47,17 @@ public class polynomial_2 {
             sb.append(stack.pop());
         }
 
-        System.out.println(sb.toString());
+        System.out.println("후위 표기식: " + sb.toString());
+
+        // 후위 표기식을 계산하는 부분
+        String postfix = sb.toString();
+        System.out.println("후위 표기식 결과: " + evaluatePostfix(postfix));
+
+        // 스택에 남은 연산자 출력
+        while (!stack.isEmpty()) {
+        sb.append(stack.pop());
     }
+}
 
     // 연산자의 우선순위를 반환하는 함수
     private static int precedence(char operator) {
@@ -61,7 +70,45 @@ public class polynomial_2 {
                 return -1;
         }
     }
+    
+    // 후위 표기식을 계산하는 함수
+    private static int evaluatePostfix(String postfix) {
+        Stack<Integer> stack = new Stack<>();
+
+        for (int i = 0; i < postfix.length(); i++) {
+            char c = postfix.charAt(i);
+
+            // 피연산자일 경우 스택에 push
+            if (Character.isDigit(c)) {
+                stack.push(c - '0'); // 문자에서 숫자로 변환
+            }
+            // 연산자를 만나면 스택에서 두 개의 피연산자를 꺼내서 계산 후 다시 스택에 push
+            else {
+                int operand2 = stack.pop();
+                int operand1 = stack.pop();
+
+                switch (c) {
+                    case '+':
+                        stack.push(operand1 + operand2);
+                        break;
+                    case '-':
+                        stack.push(operand1 - operand2);
+                        break;
+                    case '*':
+                        stack.push(operand1 * operand2);
+                        break;
+                    case '/':
+                        stack.push(operand1 / operand2);
+                        break;
+                }
+            }
+        }
+
+        // 스택에 남은 하나의 값이 최종 결과
+        return stack.pop();
+    }
 }
+
 
 
 

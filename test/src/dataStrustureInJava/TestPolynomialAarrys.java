@@ -43,15 +43,15 @@ class testPolynomialArrays {
         System.out.println(" f3(x) -  f3(x) = " + f3.sub(f3));
         System.out.println(" f3(x) -  f5(x) = " + f3.sub(f5));
 
-       // System.out.println("-------------------------------------- (곱셈) ----");
-       // System.out.println(" f1(x) *  f1(x) = " + f1.mul(f1));
-       // System.out.println(" f1(x) *  f3(x) = " + f1.mul(f3));
-       // System.out.println(" f1(x) * -f3(x) = " + f1.mul(f3.neg()));
-       // System.out.println(" f3(x) *  f5(x) = " + f3.mul(f5));
+        System.out.println("-------------------------------------- (곱셈) ----");
+        System.out.println(" f1(x) *  f1(x) = " + f1.mul(f1));
+        System.out.println(" f1(x) *  f3(x) = " + f1.mul(f3));
+        System.out.println(" f1(x) * -f3(x) = " + f1.mul(f3.neg()));
+        System.out.println(" f3(x) *  f5(x) = " + f3.mul(f5));
 
-       // System.out.println("--------------------------------- (미분 적분) ----");
-       // System.out.println("         df5(x) = " + f5.differential());
-        //System.out.println("        idf5(x) = " + f5.differential().integral());
+        System.out.println("--------------------------------- (미분 적분) ----");
+        System.out.println("         df5(x) = " + f5.differential());
+        System.out.println("        idf5(x) = " + f5.differential().integral());
 
         System.out.println("--------------------------- (Hello World~!) ----");
     }
