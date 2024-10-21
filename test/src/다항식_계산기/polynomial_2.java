@@ -17,26 +17,25 @@ public class polynomial_2 {
         for (int i = 0; i < input.length(); i++) {
             char c = input.charAt(i);
 
-            // 숫자(피연산자)는 바로 출력
-            if (Character.isLetterOrDigit(c)) {
-                sb.append(c);
-            }
-            // 연산자 처리
-            else if (c == '+' || c == '-' || c == '*' || c == '/') {
-                // 스택에 더 높은 우선순위의 연산자가 있으면 먼저 pop
-                while (!stack.isEmpty() && precedence(stack.peek()) >= precedence(c)) {
-                    sb.append(stack.pop());
+            // 다자릿수 숫자 처리
+            if (Character.isDigit(c)) {
+                while (i < input.length() && Character.isDigit(input.charAt(i))) {
+                    sb.append(input.charAt(i));
+                    i++;
                 }
-                stack.push(c); // 현재 연산자 스택에 넣기
-            }
-            // 여는 괄호는 무조건 스택에 push
-            else if (c == '(') {
+                sb.append(' '); // 숫자 사이에 구분을 위해 공백 추가
+                i--; // for loop에서 i가 이미 증가하므로 하나 감소
+            } else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
+                // 우선순위가 같거나 클 때 스택에서 pop
+                while (!stack.isEmpty() && precedence(stack.peek()) >= precedence(c)) {
+                    sb.append(stack.pop()).append(' ');
+                }
                 stack.push(c);
-            }
-            // 닫는 괄호를 만나면 여는 괄호까지 스택에서 pop
-            else if (c == ')') {
+            } else if (c == '(') {
+                stack.push(c);
+            } else if (c == ')') {
                 while (!stack.isEmpty() && stack.peek() != '(') {
-                    sb.append(stack.pop());
+                    sb.append(stack.pop()).append(' ');
                 }
                 stack.pop(); // 여는 괄호 제거
             }
@@ -44,20 +43,15 @@ public class polynomial_2 {
 
         // 스택에 남은 연산자 출력
         while (!stack.isEmpty()) {
-            sb.append(stack.pop());
+            sb.append(stack.pop()).append(' ');
         }
 
-        System.out.println("후위 표기식: " + sb.toString());
+        System.out.println("후위 표기식: " + sb.toString().trim());
 
         // 후위 표기식을 계산하는 부분
-        String postfix = sb.toString();
-        System.out.println("후위 표기식 결과: " + evaluatePostfix(postfix));
-
-        // 스택에 남은 연산자 출력
-        while (!stack.isEmpty()) {
-        sb.append(stack.pop());
+        String postfix = sb.toString().trim();
+        System.out.println("다항식 결과: " + evaluatePostfix(postfix));
     }
-}
 
     // 연산자의 우선순위를 반환하는 함수
     private static int precedence(char operator) {
@@ -66,39 +60,40 @@ public class polynomial_2 {
                 return 1;
             case '*': case '/':
                 return 2;
+            case '^':
+                return 3;
             default:
                 return -1;
         }
     }
-    
+
     // 후위 표기식을 계산하는 함수
     private static int evaluatePostfix(String postfix) {
         Stack<Integer> stack = new Stack<>();
+        String[] tokens = postfix.split(" ");
 
-        for (int i = 0; i < postfix.length(); i++) {
-            char c = postfix.charAt(i);
-
-            // 피연산자일 경우 스택에 push
-            if (Character.isDigit(c)) {
-                stack.push(c - '0'); // 문자에서 숫자로 변환
-            }
-            // 연산자를 만나면 스택에서 두 개의 피연산자를 꺼내서 계산 후 다시 스택에 push
-            else {
+        for (String token : tokens) {
+            if (token.matches("\\d+")) { // 숫자라면
+                stack.push(Integer.parseInt(token)); // 다자릿수 숫자 처리
+            } else {
                 int operand2 = stack.pop();
                 int operand1 = stack.pop();
 
-                switch (c) {
-                    case '+':
+                switch (token) {
+                    case "+":
                         stack.push(operand1 + operand2);
                         break;
-                    case '-':
+                    case "-":
                         stack.push(operand1 - operand2);
                         break;
-                    case '*':
+                    case "*":
                         stack.push(operand1 * operand2);
                         break;
-                    case '/':
+                    case "/":
                         stack.push(operand1 / operand2);
+                        break;
+                    case "^":
+                        stack.push((int) Math.pow(operand1, operand2));
                         break;
                 }
             }
@@ -108,7 +103,3 @@ public class polynomial_2 {
         return stack.pop();
     }
 }
-
-
-
-
