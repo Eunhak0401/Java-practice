@@ -4,6 +4,5 @@ import java.util.Scanner;
 
 public class DP_Integer_triangle {
     public static void main(String[] args) {
-        
     }
 }
