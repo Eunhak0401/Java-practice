@@ -18,7 +18,7 @@ public class TestStackSL {
             System.out.println("        length " + stackThree.push(" Information") + " data pushed in");
             System.out.println("    stackThree " + stackThree.toString(stackSize, stackIndent));
 
-            System.out.println("        length " + stackThree.push(7) + " data pushed in");
+            System.out.println("        length " + stackThree.push("7 data pushed in"));
             System.out.println("    stackThree " + stackThree.toString(stackSize, stackIndent));
 
             System.out.println("--------------------------------------------------- (pop) ---");

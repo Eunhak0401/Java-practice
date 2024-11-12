@@ -28,11 +28,12 @@ public class test4BracketsASMD {
         System.out.println("         postFix > " + ASMD.postFix(formulaTwo));
 
         System.out.println("----------------------------------------- evaluation ----");
-//        System.out.println("     formulaZero = " + ASMD.evaluatePostFix(oformulaZer));
+        System.out.println("     formulaZero = " + ASMD.evaluatePostFix(formulaZero));
         System.out.println("                   -------------------------------------");
-//        System.out.println("      formulaOne = " + ASMD.evaluatePostFix(formulaOne));
+        System.out.println("      formulaOne = " + ASMD.evaluatePostFix(formulaOne));
         System.out.println("                   -------------------------------------");
-//        System.out.println("      formulaTwo = " + ASMD.evaluatePostFix(formulaTwo));
+        System.out.println("      formulaTwo = " + ASMD.evaluatePostFix(formulaTwo));
+
 
         System.out.println("==================================== (Hello World~!) ====");
         System.out.println("==================================== (202430118 이은학) ====");

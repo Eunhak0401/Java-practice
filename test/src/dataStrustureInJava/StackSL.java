@@ -3,91 +3,95 @@ package dataStrustureInJava;
 public class StackSL {
     private NodeSL top;
 
-
     public StackSL() {
         top = null;
     }
 
-    public StackSL(char data){
+    public StackSL(char data) {
         top = new NodeSL(data);
     }
 
-    public StackSL(int data){
+    public StackSL(int data) {
         top = new NodeSL((char) ('0' + data));
     }
 
-    public StackSL(char[] dataArray){
+    public StackSL(char[] dataArray) {
         for (int i = 0; i < dataArray.length; i++) {
             push(dataArray[i]);
         }
     }
 
     // getter
-    public NodeSL getTop(){
+    public NodeSL getTop() {
         return top;
     }
 
     // setter
-    public void setTop(NodeSL top){
+    public void setTop(NodeSL top) {
         this.top = top;
     }
 
-
-    public void push(char data) {
-        NodeSL newNodeSL = new NodeSL(data);
-        newNodeSL.setRight(top);
-        top = newNodeSL;
-    }
 
     public int push(int data) {
         this.push((char) ('0' + data));
         return 1;
     }
 
-    public int push(String data){
-        int i;
+    public int push(char data) {
+        NodeSL newNode = new NodeSL(data);
+        newNode.setRight(top);
+        top = newNode; // top을 새 노드로 업데이트
+        return 1; // 푸시 성공
+    }
 
+    // 문자열을 하나씩 push
+    public int push(String data) {
+        int i;
         for (i = 0; i < data.length(); i++) {
             push(data.charAt(i));
         }
         return i;
     }
 
-    public String pop(int myNum) {
-        String myString = "";
-        for (int i = 0; i < myNum; i++) {
-            myString += pop();
-            if(isEempy()){
-                break;
-            }
-        }
-
-        return myString;
-    }
-
-    public String pop() {
-        NodeSL myNodeSl = null;
-
+public String pop(){
+        NodeSL myNodeSL = null;
         if (top == null) {
             return null;
-        } else {
-            myNodeSl = top;
-            top = top.getRight();
         }
+        myNodeSL = top;
+        top = top.getRight();
+        return "" + myNodeSL.getRight();
+}
 
-        return "" + myNodeSl.getData();
-
+public String pop(int myNum){
+        String myString = "";
+    for (int i = 0; i < myNum; i++) {
+        myString += pop();
+        if (isEempy()){
+            break;
+        }
     }
+    return myString;
+}
+
+    // 스택의 크기 반환
     public int length() {
         int count = 0;
-        NodeSL mytop = this.top;
+        NodeSL myTop = this.top;
 
-        while (mytop != null) {
-            mytop = mytop.getRight();
+        while (myTop != null) {
+            myTop = myTop.getRight();  // getRight() -> getNext()
             count++;
         }
-
         return count;
+    }
+
+    public boolean isEempy() {
+        if (this.top == null){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     /**
@@ -121,14 +125,6 @@ public class StackSL {
         resultString += " ".repeat(indent) + "---+" + wall;
 
         return resultString;
-    }
-
-    public boolean isEempy() {
-        if (this.top == null){
-            return true;
-        }else {
-            return false;
-        }
     }
 }
 

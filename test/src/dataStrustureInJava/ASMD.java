@@ -1,5 +1,7 @@
 package dataStrustureInJava;
 
+import java.util.StringTokenizer;
+
 public class ASMD {
     private static String numbers = "123456789";
 
@@ -70,61 +72,74 @@ public class ASMD {
     }
 
 
-//    static int evaluatePostFix(String expr) {
-//        // 계산을 위한 스택 생성
-//        StackSL mystack = new StackSL();
-//        String operators = "+-*/^";
-//
-//        // 수식을 한 글자씩 읽어들여 계산
-//        for (int i = 0; i < expr.length(); i++) {
-//            char ch = expr.charAt(i);
-//
-//            // 숫자인 경우 스택에 추가
-//            if (Character.isDigit(ch)) {
-//                mystack.push(ch - '0');  // char를 int로 변환하여 푸시
-//            }
-//            // 연산자인 경우 스택에서 두 값을 꺼내 연산 수행
-//            else if (operators.contains("" + ch)) {
-//                if (mystack.isEempy())  // 오타 수정: isEmpty()가 맞습니다
-//                    throw new IllegalArgumentException("Invalid postfix expression: insufficient operands.");
-//
-//                int b = mystack.pop();  // pop() 메서드가 int 값을 반환합니다.
-//                int a = mystack.pop();  // pop() 메서드가 int 값을 반환합니다.
-//                int result = 0;
-//
-//                // 연산자에 따른 계산 수행
-//                switch (ch) {
-//                    case '+':
-//                        result = a + b;
-//                        break;
-//                    case '-':
-//                        result = a - b;
-//                        break;
-//                    case '*':
-//                        result = a * b;
-//                        break;
-//                    case '/':
-//                        if (b == 0) throw new ArithmeticException("Divide by zero error.");
-//                        result = a / b;
-//                        break;
-//                    case '^':
-//                        result = (int) Math.pow(a, b);
-//                        break;
-//                    default:
-//                        throw new IllegalArgumentException("Unsupported operator: " + ch);
-//                }
-//                mystack.push(result);  // 연산 결과를 다시 스택에 푸시
-//            } else if (!Character.isWhitespace(ch)) {
-//                throw new IllegalArgumentException("Invalid character in expression: " + ch);
-//            }
-//        }
-//
-//        // 최종 결과는 스택의 마지막 값
-//        if (mystack.isEempy()) {  // 오타 수정: isEmpty()가 맞습니다
-//            throw new IllegalArgumentException("Invalid postfix expression: no result.");
-//        }
-//        return mystack.pop();  // pop() 메서드는 이제 int 값을 반환합니다.
-//    }
+    static int evaluatePostFix(String expr) {
+        StackSL mystack = new StackSL();
+        String[] tokens = expr.split(" ");
 
+        // 입력 데이터 검증: 연산자와 피연산자의 개수 균형 확인
+        int operandCount = 0;
+        int operatorCount = 0;
 
+        for (String token : tokens) {
+            if (token.matches("\\d+")) {
+                operandCount++;
+            } else if (operators.contains(token)) {
+                operatorCount++;
+            }
+        }
+
+        if (operandCount - 1 != operatorCount) {
+            throw new IllegalArgumentException("후위 표기식이 잘못되었습니다. (피연산자와 연산자의 수 불균형)");
+        }
+
+        // 후위 표기식 평가
+        for (String token : tokens) {
+            if (token.matches("\\d+")) {
+                // 숫자를 스택에 푸시 (문자열로 저장)
+                mystack.push(token);
+            } else {
+                // 연산자를 만난 경우 피연산자 2개를 스택에서 pop
+                String op2 = mystack.pop(); // 스택에서 pop
+                String op1 = mystack.pop(); // 스택에서 pop
+
+                if (op1 == null || op2 == null) {
+                    throw new IllegalStateException("스택에 충분한 피연산자가 없습니다.");
+                }
+
+                int operand2 = Integer.parseInt(op2);
+                int operand1 = Integer.parseInt(op1);
+
+                int result;
+                switch (token) {
+                    case "+":
+                        result = operand1 + operand2;
+                        break;
+                    case "-":
+                        result = operand1 - operand2;
+                        break;
+                    case "*":
+                        result = operand1 * operand2;
+                        break;
+                    case "/":
+                        result = operand1 / operand2;
+                        break;
+                    case "^":
+                        result = (int) Math.pow(operand1, operand2);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("알 수 없는 연산자: " + token);
+                }
+
+                // 결과를 문자열로 변환하여 스택에 푸시
+                mystack.push(String.valueOf(result));
+            }
+        }
+
+        // 스택의 최종 결과 반환
+        String finalResult = mystack.pop();
+        if (finalResult == null) {
+            throw new IllegalStateException("스택이 비어 있습니다. 올바르지 않은 후위 표기식입니다.");
+        }
+        return Integer.parseInt(finalResult);
+    }
 }
