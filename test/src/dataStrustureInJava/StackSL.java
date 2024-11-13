@@ -3,18 +3,9 @@ package dataStrustureInJava;
 public class StackSL {
     private NodeSL top;
 
-    public StackSL() {
-        top = null;
-    }
-
-    public StackSL(char data) {
-        top = new NodeSL(data);
-    }
-
-    public StackSL(int data) {
-        top = new NodeSL((char) ('0' + data));
-    }
-
+    public StackSL() {top = null;}
+    public StackSL(char data) {top = new NodeSL(data);}
+    public StackSL(int data) {top = new NodeSL((char) ('0' + data));}
     public StackSL(char[] dataArray) {
         for (int i = 0; i < dataArray.length; i++) {
             push(dataArray[i]);
@@ -22,15 +13,9 @@ public class StackSL {
     }
 
     // getter
-    public NodeSL getTop() {
-        return top;
-    }
-
+    public NodeSL getTop() {return top;}
     // setter
-    public void setTop(NodeSL top) {
-        this.top = top;
-    }
-
+    public void setTop(NodeSL top) {this.top = top;}
 
     public int push(int data) {
         this.push((char) ('0' + data));
@@ -38,9 +23,9 @@ public class StackSL {
     }
 
     public int push(char data) {
-        NodeSL newNode = new NodeSL(data);
-        newNode.setRight(top);
-        top = newNode; // top을 새 노드로 업데이트
+        NodeSL newNodeSL = new NodeSL(data);
+        newNodeSL.setRight(top);
+        top = newNodeSL; // top을 새 노드로 업데이트
         return 1; // 푸시 성공
     }
 
@@ -55,9 +40,7 @@ public class StackSL {
 
 public String pop(){
         NodeSL myNodeSL = null;
-        if (top == null) {
-            return null;
-        }
+        if (top == null) return null;
         myNodeSL = top;
         top = top.getRight();
         return "" + myNodeSL.getRight();
@@ -67,9 +50,7 @@ public String pop(int myNum){
         String myString = "";
     for (int i = 0; i < myNum; i++) {
         myString += pop();
-        if (isEempy()){
-            break;
-        }
+        if (isEempy()) break;
     }
     return myString;
 }
@@ -87,11 +68,8 @@ public String pop(int myNum){
     }
 
     public boolean isEempy() {
-        if (this.top == null){
-            return true;
-        }else {
-            return false;
-        }
+        if (this.top == null) return true;
+        else return false;
     }
 
     /**

@@ -34,8 +34,6 @@ public class test4BracketsASMD {
         System.out.println("                   -------------------------------------");
         System.out.println("      formulaTwo = " + ASMD.evaluatePostFix(formulaTwo));
 
-
         System.out.println("==================================== (Hello World~!) ====");
-        System.out.println("==================================== (202430118 이은학) ====");
     }
 }
