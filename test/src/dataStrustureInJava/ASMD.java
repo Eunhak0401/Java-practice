@@ -49,10 +49,10 @@ public class ASMD {
         StackSL mystack = new StackSL();
 
         for (int i = 0; i < expr.length(); i++) {
-            if (operators.contains("" + expr.charAt(i))) mystack.push(expr.charAt(i));
+            if      (operators.contains("" + expr.charAt(i))) mystack.push(expr.charAt(i));
             else if (expr.charAt(i) == '(') ;
             else if (expr.charAt(i) == ')') buff += mystack.pop();
-            else buff += expr.charAt(i);
+            else                            buff += expr.charAt(i);
         }
         return buff;
     }
@@ -67,24 +67,22 @@ public class ASMD {
         char c;
         int result = 0;
 
-
         for (int i = 0; i < postFix.length(); i++) {
             c = postFix.charAt(i);
 
             if (numbers.contains("" + postFix.charAt(i)))
                 mystack.push(c);
             else if(operators.contains("" + postFix.charAt(i))) {
-                int num1 = mystack.pop().charAt(0) - '0';
                 int num2 = mystack.pop().charAt(0) - '0';
+                int num1 = mystack.pop().charAt(0) - '0';
 
-
-                if (postFix.charAt(i) == '+') result = num1 + num2;
+                if      (postFix.charAt(i) == '+') result = num1 + num2;
                 else if (postFix.charAt(i) == '-') result = num1 - num2;
                 else if (postFix.charAt(i) == '*') result = num1 * num2;
                 else if (postFix.charAt(i) == '/') result = num1 / num2;
                 else if (postFix.charAt(i) == '^') result = (int) Math.pow(num1, num2);
 
-                System.out.println("             "+ num1 +" "+ postFix.charAt(i) + " " + num2 + " = " + result);
+                System.out.println("             " + num1 + " " + postFix.charAt(i) + " " + num2 + " = " + result);
 
                 mystack.push(result);
             }

@@ -17,16 +17,16 @@ public class StackSL {
     // setter
     public void setTop(NodeSL top) {this.top = top;}
 
-    public int push(int data) {
-        this.push((char) ('0' + data));
-        return 1;
-    }
-
     public int push(char data) {
         NodeSL newNodeSL = new NodeSL(data);
         newNodeSL.setRight(top);
         top = newNodeSL; // top을 새 노드로 업데이트
         return 1; // 푸시 성공
+    }
+
+    public int push(int data) {
+        this.push((char) ('0' + data));
+        return 1;
     }
 
     // 문자열을 하나씩 push
