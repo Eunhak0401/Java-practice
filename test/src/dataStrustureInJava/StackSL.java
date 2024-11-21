@@ -12,16 +12,15 @@ public class StackSL {
         }
     }
 
-    // getter
-    public NodeSL getTop() {return top;}
-    // setter
+
+    public NodeSL getTop()         {return top;}
     public void setTop(NodeSL top) {this.top = top;}
 
     public int push(char data) {
         NodeSL newNodeSL = new NodeSL(data);
         newNodeSL.setRight(top);
-        top = newNodeSL; // top을 새 노드로 업데이트
-        return 1; // 푸시 성공
+        top = newNodeSL;
+        return 1;
     }
 
     public int push(int data) {
@@ -38,12 +37,12 @@ public class StackSL {
         return i;
     }
 
-public String pop(){
+    public String pop(){
         NodeSL myNodeSL = null;
         if (top == null) return null;
         myNodeSL = top;
         top = top.getRight();
-        return "" + myNodeSL.getRight();
+        return "" + myNodeSL.getData();
 }
 
 public String pop(int myNum){

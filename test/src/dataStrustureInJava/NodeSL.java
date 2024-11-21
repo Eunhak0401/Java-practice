@@ -1,8 +1,8 @@
 package dataStrustureInJava;
 
 public class NodeSL {
-    private char data = '\0';
-    NodeSL right = null;
+    protected char data = '\0';
+    protected NodeSL right = null;
 
     NodeSL() { ; }
 

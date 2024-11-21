@@ -57,13 +57,12 @@ public class ASMD {
         return buff;
     }
 
-    static int evaluatePostFix(String fomula) {
+    static int evaluatePostFix(String formula) {
         StackSL mystack = new StackSL();
-        if (ASMD.isGoodPair(fomula) == false) {
+        if (ASMD.isGoodPair(formula) == false)
             return 0;
-        }
 
-        String postFix = postFix(fomula);
+        String postFix = postFix(formula);
         char c;
         int result = 0;
 
