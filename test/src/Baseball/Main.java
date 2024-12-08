@@ -2,56 +2,73 @@ package Baseball;
 
 import java.util.*;
 
-abstract class BaseballGame {
-    protected int[] computerNumbers = new int[3];
-    protected int turns;
-
-    public abstract void startGame();
-
-    protected void generateNumbers() {
-        Random random = new Random();
-        Set<Integer> uniqueNumbers = new HashSet<>();
-        while (uniqueNumbers.size() < 3) {
-            uniqueNumbers.add(random.nextInt(9) + 1); // 1 ~ 9 랜덤 숫자 생성
-        }
-        int index = 0;
-        for (int num : uniqueNumbers) {
-            computerNumbers[index++] = num;
-        }
-    }
+// 추상 클래스 정의
+abstract class Game {
+    abstract void start();
 }
 
-interface GameLogic {
-    int[] checkNumbers(int[] playerInput);
-    void printResult(int strikes, int balls);
-    boolean askToContinue();
+// 인터페이스 정의
+interface Playable {
+    void play();
 }
 
-class BaseballGameImpl extends BaseballGame implements GameLogic {
+// 야구 게임 클래스
+class BaseballGame extends Game implements Playable {
+    private int[] computerNumbers = new int[3]; // 컴퓨터가 생성한 숫자
+    private int turnCount = 1; // 현재 턴 수
     private Scanner scanner = new Scanner(System.in);
 
     @Override
-    public void startGame() {
-        generateNumbers();
-        turns = 1;
+    public void start() {
+        generateRandomNumbers();
         System.out.println("야구게임을 시작합니다.");
+        play();
+    }
 
+    @Override
+    public void play() {
         while (true) {
-            System.out.println("턴 #" + turns);
-            int[] playerInput = getPlayerInput();
-            int[] result = checkNumbers(playerInput);
-            printResult(result[0], result[1]);
+            System.out.println("\n턴 #" + turnCount);
+            int[] playerNumbers = getPlayerInput();
+            int strikes = 0, balls = 0;
 
-            if (result[0] == 3) {
-                System.out.println("스트라이크 아웃!! 게임 종료!");
-                break;
+            // 스트라이크와 볼 계산
+            for (int i = 0; i < 3; i++) {
+                if (playerNumbers[i] == computerNumbers[i]) {
+                    strikes++;
+                } else if (isNumberInArray(computerNumbers, playerNumbers[i])) {
+                    balls++;
+                }
             }
 
+            // 결과 출력
+            if (strikes == 3) {
+                System.out.println("3스트라이크! 아웃!! 게임 종료!");
+                break;
+            } else if (strikes == 0 && balls == 0) {
+                System.out.println("아웃!");
+            } else {
+                System.out.println(strikes + "스트라이크 " + balls + "볼");
+            }
+
+            // 게임 계속 여부 확인
             if (!askToContinue()) {
                 System.out.println("게임을 종료합니다.");
                 break;
             }
-            turns++;
+
+            turnCount++;
+        }
+    }
+
+    private void generateRandomNumbers() {
+        Set<Integer> uniqueNumbers = new HashSet<>();
+        while (uniqueNumbers.size() < 3) {
+            uniqueNumbers.add((int) (Math.random() * 9) + 1); // Math.random() 사용
+        }
+        int index = 0;
+        for (int num : uniqueNumbers) {
+            computerNumbers[index++] = num;
         }
     }
 
@@ -65,38 +82,7 @@ class BaseballGameImpl extends BaseballGame implements GameLogic {
         return input;
     }
 
-    @Override
-    public int[] checkNumbers(int[] playerInput) {
-        int strikes = 0;
-        int balls = 0;
-
-        for (int i = 0; i < 3; i++) {
-            if (playerInput[i] == computerNumbers[i]) {
-                strikes++;
-            } else if (contains(computerNumbers, playerInput[i])) {
-                balls++;
-            }
-        }
-        return new int[]{strikes, balls};
-    }
-
-    @Override
-    public void printResult(int strikes, int balls) {
-        if (strikes == 0 && balls == 0) {
-            System.out.println("아웃!");
-        } else {
-            System.out.println(strikes + "스트라이크 " + balls + "볼");
-        }
-    }
-
-    @Override
-    public boolean askToContinue() {
-        System.out.print("계속 하시겠습니까? (Y/N): ");
-        String response = scanner.next().toUpperCase();
-        return response.equals("Y");
-    }
-
-    private boolean contains(int[] array, int value) {
+    private boolean isNumberInArray(int[] array, int value) {
         for (int num : array) {
             if (num == value) {
                 return true;
@@ -104,12 +90,18 @@ class BaseballGameImpl extends BaseballGame implements GameLogic {
         }
         return false;
     }
-}
 
-public class Main {
-    public static void main(String[] args) {
-        BaseballGame game = new BaseballGameImpl();
-        game.startGame();
+    private boolean askToContinue() {
+        System.out.print("계속 하시겠습니까? (Y/N): ");
+        String response = scanner.next().toUpperCase();
+        return response.equals("Y");
     }
 }
 
+// 메인 클래스
+public class Main {
+    public static void main(String[] args) {
+        Game game = new BaseballGame(); // 추상 클래스 사용
+        game.start();
+    }
+}
